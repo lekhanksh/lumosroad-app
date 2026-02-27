@@ -1,0 +1,21 @@
+{
+  "name": "lumosroad-safety-lambda",
+  "version": "1.0.0",
+  "private": true,
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "lint": "eslint src --ext .ts",
+    "test": "echo \"No tests yet\""
+  },
+  "dependencies": {
+    "@aws-sdk/client-bedrock-runtime": "^3.645.0",
+    "axios": "^1.7.5"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.137",
+    "@types/node": "^20.11.30",
+    "typescript": "^5.4.0"
+  }
+}
