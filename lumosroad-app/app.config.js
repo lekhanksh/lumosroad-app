@@ -6,7 +6,7 @@ export default {
     extra: {
       EXPO_PUBLIC_SAFETY_API_BASE_URL:
         process.env.EXPO_PUBLIC_SAFETY_API_BASE_URL ??
-        "https://XXXX.execute-api.us-east-1.amazonaws.com/prod",
+        "https://37ik1364i8.execute-api.us-east-1.amazonaws.com/prod/score",
     },
     ios: {
       config: {

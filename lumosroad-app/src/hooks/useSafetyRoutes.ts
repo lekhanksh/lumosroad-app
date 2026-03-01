@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { LatLng, SafetyScorerResponse } from "../types/navigation";
-import { fetchSafetyRoutes as fetchMock } from "../services/mockSafetyApi";
+import { fetchSafetyRoutes } from "../services/mockSafetyApi";
 
 type UseSafetyRoutesParams = {
   origin: LatLng | null;
@@ -18,27 +18,6 @@ type SafetyRoutesState = {
 
 const SAFETY_API_BASE_URL = process.env.EXPO_PUBLIC_SAFETY_API_BASE_URL ?? "";
 
-const fetchFromLambda = async (
-  origin: LatLng,
-  destination: LatLng,
-): Promise<SafetyScorerResponse> => {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 8000);
-
-  try {
-    const res = await fetch(SAFETY_API_BASE_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ origin, destination }),
-      signal: controller.signal,
-    });
-    if (!res.ok) throw new Error(`Lambda ${res.status}`);
-    return (await res.json()) as SafetyScorerResponse;
-  } finally {
-    clearTimeout(timeout);
-  }
-};
-
 export const useSafetyRoutes = ({
   origin,
   destination,
@@ -48,43 +27,51 @@ export const useSafetyRoutes = ({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [source, setSource] = useState<"lambda" | "mock" | null>(null);
-  const seqRef = useRef(0);
 
   const fetchRoutes = useCallback(async () => {
     if (!origin || !destination) return;
 
-    const seq = ++seqRef.current;
     setIsLoading(true);
     setError(null);
-    setSource(null);
 
-    try {
-      // Try Lambda first if URL is configured
-      if (SAFETY_API_BASE_URL && !SAFETY_API_BASE_URL.includes("XXXX")) {
-        try {
-          const lambdaData = await fetchFromLambda(origin, destination);
-          if (seq !== seqRef.current) return;
-          setData(lambdaData);
-          setSource("lambda");
-          return;
-        } catch (lambdaErr) {
-          console.log("Lambda unavailable, falling back to mock:", (lambdaErr as Error).message);
+    // Try live API first, fall back to mock
+    if (SAFETY_API_BASE_URL && !SAFETY_API_BASE_URL.includes("XXXX")) {
+      try {
+        const response = await fetch(SAFETY_API_BASE_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ origin, destination }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`API returned ${response.status}`);
         }
-      }
 
-      // Fallback to local mock
-      const mockData = await fetchMock(origin, destination);
-      if (seq !== seqRef.current) return;
-      setData(mockData);
+        let json = await response.json();
+        
+        // Handle API Gateway wrapper format
+        if (json.body && typeof json.body === 'string') {
+          json = JSON.parse(json.body);
+        }
+        
+        setData(json as SafetyScorerResponse);
+        setSource("lambda");
+        setIsLoading(false);
+        return;
+      } catch {
+        // Fall through to mock
+      }
+    }
+
+    // Mock fallback
+    try {
+      const mock = await fetchSafetyRoutes(origin, destination);
+      setData(mock);
       setSource("mock");
     } catch (err) {
-      if (seq === seqRef.current) {
-        setError((err as Error).message);
-      }
+      setError((err as Error).message);
     } finally {
-      if (seq === seqRef.current) {
-        setIsLoading(false);
-      }
+      setIsLoading(false);
     }
   }, [origin, destination]);
 

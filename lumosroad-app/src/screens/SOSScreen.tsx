@@ -2,13 +2,15 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   Animated,
   Linking,
-  SafeAreaView,
+  Platform,
+  ScrollView,
   StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -61,7 +63,11 @@ export const SOSScreen: React.FC = () => {
   return (
     <SafeAreaView style={st.safe}>
       <StatusBar barStyle="light-content" />
-      <View style={st.container}>
+      <ScrollView 
+        style={st.container}
+        contentContainerStyle={{ paddingBottom: Platform.OS === 'web' ? 60 : 32 }}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Pulsing header */}
         <View style={st.headerWrap}>
           <View style={st.iconWrap}>
@@ -136,7 +142,7 @@ export const SOSScreen: React.FC = () => {
             <Text style={st.cancelText}>Cancel SOS</Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -229,7 +235,7 @@ const st = StyleSheet.create({
   },
   statusLabel: { flex: 1, fontSize: 13, fontWeight: "600", color: "#FFF" },
   /* actions */
-  actions: { marginTop: "auto", paddingBottom: 32, gap: 10 },
+  actions: { marginTop: 24, gap: 10 },
   callBtn: {
     flexDirection: "row",
     alignItems: "center",

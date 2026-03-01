@@ -1,12 +1,12 @@
 import React from "react";
 import {
-  SafeAreaView,
   StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useApp } from "../context/AppContext";
 
@@ -90,7 +90,7 @@ export const OnboardingScreen: React.FC = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#F8FAFC",
+    backgroundColor: "#F8F9FC",
   },
   container: {
     flex: 1,
@@ -119,13 +119,13 @@ const styles = StyleSheet.create({
   appName: {
     fontSize: 28,
     fontWeight: "800",
-    color: "#0F172A",
+    color: "#1A1D2E",
     letterSpacing: 0.5,
     marginTop: 8,
   },
   tagline: {
     fontSize: 14,
-    color: "#94A3B8",
+    color: "#8C90A5",
     textAlign: "center",
   },
   permissionsCard: {
@@ -158,16 +158,16 @@ const styles = StyleSheet.create({
   permissionTitle: {
     fontSize: 15,
     fontWeight: "600",
-    color: "#0F172A",
+    color: "#1A1D2E",
   },
   permissionDesc: {
     fontSize: 12,
-    color: "#94A3B8",
+    color: "#8C90A5",
     lineHeight: 17,
   },
   divider: {
     height: 1,
-    backgroundColor: "#F1F5F9",
+    backgroundColor: "#F0F1F5",
     marginLeft: 58,
   },
   bottomSection: {
@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   skipText: {
-    color: "#94A3B8",
+    color: "#8C90A5",
     fontSize: 14,
   },
 });

@@ -62,7 +62,7 @@ const AppContext = createContext<AppState | null>(null);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [hasOnboarded, setHasOnboarded] = useState(false);
-  const [origin, setOrigin] = useState<LatLng | null>({ lat: 18.5314, lng: 73.8446 });
+  const [origin, setOrigin] = useState<LatLng | null>({ lat: 18.5913, lng: 73.7623 });
   const [destination, setDestination] = useState<LatLng | null>(null);
   const [destinationName, setDestinationName] = useState("");
   const [routeData, setRouteData] = useState<SafetyScorerResponse | null>(null);

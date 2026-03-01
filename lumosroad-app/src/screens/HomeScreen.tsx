@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   FlatList,
-  SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -11,6 +10,7 @@ import {
   View,
   Dimensions,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { CrossPlatformMap } from "../components/CrossPlatformMap";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -172,8 +172,8 @@ export const HomeScreen: React.FC = () => {
           <View style={s.mapArea}>
             <CrossPlatformMap
               initialRegion={{
-                latitude: 18.53,
-                longitude: 73.85,
+                latitude: 18.5913,
+                longitude: 73.7623,
                 latitudeDelta: 0.12,
                 longitudeDelta: 0.12,
               }}
